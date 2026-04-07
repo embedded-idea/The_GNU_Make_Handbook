@@ -1,0 +1,65 @@
+CC ?= gcc
+VAR1:=haha
+
+SRCS = main.c util.c
+OBJS = $(SRCS:.c=.o)
+
+libs_for_gcc = -lm #libm.so 
+normal_libs  =
+
+ifeq ($(CC),gcc)
+LIBS = $(libs_for_gcc)
+else
+LIBS = $(normal_libs)
+endif
+
+ifneq ($(VAR1),hehe) #haha
+VAR1 += haha_ifneq #haha haha_ifneq
+else
+VAR1 += hehe_ifneq
+endif
+
+ifeq ($(VAR1),haha)
+    VAR1 += hahahaifeq
+endif
+
+ifneq ($(VAR1),hehe)#haha haha_ifneq
+	VAR1 += hahahaifneq
+endif#haha haha_ifneq hahahaifneq
+
+
+VAR2 =
+VAR3 =
+ifdef VAR2
+result1 = yes
+endif
+
+ifndef VAR3
+result2 = no
+endif
+
+
+# ifdef VAR2
+# result1 = yes
+# else
+# result1 = no
+# endif
+
+# ifndef VAR3
+# result2 = yes
+# else
+# result2 = no
+# endif
+
+
+
+
+program: $(OBJS)
+	@echo "compiler is $(CC)"
+	@echo "VAR1 is $(VAR1)"
+	@echo "VAR2 is $(result1)"
+	@echo "VAR3 is $(result2)"
+	$(CC) -o program $(OBJS) $(LIBS)
+	
+clean:
+	rm -rf *.o program

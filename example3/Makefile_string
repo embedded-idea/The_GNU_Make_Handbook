@@ -1,0 +1,63 @@
+#$(<function> <arguments>)
+#${<function> <arguments>}
+
+#$(subst FROM,TO,TEXT)
+#FROM: string to be replaced
+#TO: replacement string
+#TEXT: the input text
+# COMMA := ,
+# EMPTY :=
+# SPACE := $(EMPTY) $(EMPTY)
+
+# ORIGINALTEXT := A B C
+# TARGETTEXT := $(subst $(SPACE),$(COMMA),$(ORIGINALTEXT))
+
+
+#String Functions
+#subst
+#patsubst
+#strip
+#findstring
+#filter
+#filter-out
+#sort
+#word
+#wordlist
+#words
+#firstword
+
+
+#$(patsubst <pattern>,<replacement>,<text>)
+TARGETTEXT := $(patsubst %.c,%.o, a.c b.c c.c)
+
+#$(strip <string>)
+TARGETTEXT := $(strip aa     dd    cc)
+
+#$(findstring <find>,<in>)
+TARGETTEXT := $(findstring a,a b c)
+
+#$(filter <pattern...>,<text>)
+SRC := abc.c xyz.c ooo.s haha.h
+TARGETTEXT:= $(filter %.c %.s,$(SRC))
+
+#$(filter <pattern...>,<text>)
+SRC := abc.c xyz.c ooo.s haha.h
+TARGETTEXT:= $(filter-out %.c %.s,$(SRC))
+
+#$(sort <list>)
+TARGETTEXT := $(sort nnn ccc jjj ddd)
+
+#$(word <n>,<text>)
+TARGETTEXT := $(word 2, nnn ccc jjj ddd)
+
+#$(wordlist <s>,<e>,<text>)
+TARGETTEXT := $(wordlist 2,3, ttt nnn jjj ddd)
+
+#$(words <text>)
+TARGETTEXT := $(words ttt nnn jjj ddd)
+
+#$(firstword <text>)
+TARGETTEXT := $(firstword ttt nnn jjj ddd)
+all:
+	@echo $(TARGETTEXT)
+
