@@ -1,0 +1,46 @@
+#Ninja itself does not “support out-of-source builds” as a concept like 
+#CMake does.
+#Instead, you implement it manually by controlling paths.
+
+#So in this example, we will:
+#keep source files in root
+#put all outputs in build/
+#manually define paths in build.ninja
+#Unlike Make or CMake:
+#Ninja does not manage directories automatically
+#You explicitly control output paths
+
+# =========================
+# Variables
+# =========================
+cc = gcc
+cflags = -Wall -Wextra -O2
+
+builddir = build
+
+# =========================
+# Rules
+# =========================
+rule cc
+  command = $cc $cflags -c $in -o $out
+  description = CC $out
+
+rule link
+  command = $cc $in -o $out
+  description = LINK $out
+
+# =========================
+# Build Targets
+# =========================
+
+# Object files go into build/
+build $builddir/main.o: cc main.c
+build $builddir/mathlib.o: cc mathlib.c
+
+# Final binary also in build/
+build $builddir/app: link $builddir/main.o $builddir/mathlib.o
+
+# Default target
+default $builddir/app
+
+
