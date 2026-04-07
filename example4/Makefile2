@@ -1,0 +1,85 @@
+# After executing the make command, 
+#there are three possible exit codes:
+# 0 Indicates successful execution.
+# 1 Returned if any error occurs 
+#during the execution of make.
+# 2 Returned if the -q option is 
+#used and make determines that some targets do 
+#not need to be updated.
+
+
+# all:
+# 	@echo "Build successful"
+# all:
+# 	gcc main.c -o app
+# all
+# 	@echo missing colon
+# all:
+# 	gcc not_exist.c -o app
+# all:
+# 	$(error Something is wrong!)
+
+
+
+# -B, --always-make Unconditionally make 
+# all targets.
+
+# all: hello.txt
+
+# hello.txt:
+# 	@echo "Building hello.txt..."
+# 	@echo "hello world" > hello.txt
+
+
+# -j [N], --jobs[=N]      Allow N jobs at once; 
+# infinite jobs with no arg.
+#         app
+#        /   \
+#     main.o  util.o
+#If two targets are independent, 
+#they can run in parallel
+
+
+# -d or --debug 
+# What kind of information does it show?
+# When you run with -d, make prints:
+# 1 Dependency analysis
+# Considering target file 'app'
+# Looking for dependencies...
+
+# 2 Timestamp decisions
+# File 'main.o' is older than 'main.c'
+# needs rebuild
+
+# 3 Rule matching
+# Trying implicit rule...
+# Trying pattern rule...
+
+# 4 Why something is (or is not) rebuilt
+# No need to remake target 'util.o'
+
+
+#Simulating builds safely with -n (dry run) 
+#-n, --just-print, --dry-run
+
+#-k, --keep-going            
+#Keep going when some targets can't be made.
+#-i, --ignore-errors         
+#Ignore errors from recipes.
+
+#-e, --environment-overrides
+
+#Managing directories and files (-C, -f, -I)
+#-C DIRECTORY, --directory=DIRECTORY
+#Change to DIRECTORY before doing anything.
+#-f FILE, --file=FILE, --makefile=FILE
+#Read FILE as a makefile.
+#-I DIRECTORY, --include-dir=DIRECTORY
+#Search DIRECTORY for included makefiles.
+
+#CC = gcc
+
+util.o: util.c
+	$(CC) $(CFLAGS) -c util.c
+
+
