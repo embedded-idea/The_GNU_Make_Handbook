@@ -1,0 +1,41 @@
+CC = gcc
+AR = ar
+CFLAGS = -Wall -Wextra -O2
+PICFLAGS = -fPIC
+
+SRCS = add.c sub.c mul.c div.c
+OBJS = $(SRCS:.c=.o)
+PIC_OBJS = $(SRCS:.c=.pic.o)
+
+STATIC_LIB = libmymathst.a
+SHARED_LIB = libmymathsh.so
+TARGET_STATIC = app_static
+TARGET_SHARED = app_shared
+
+all: $(STATIC_LIB) $(SHARED_LIB) $(TARGET_STATIC) $(TARGET_SHARED)
+
+$(STATIC_LIB): $(OBJS)
+	$(AR) rcs $@ $^
+
+$(SHARED_LIB): $(PIC_OBJS)
+	$(CC) -shared -o $@ $^
+
+$(TARGET_STATIC): main.o $(STATIC_LIB)
+	$(CC) main.o -L. -lmymathst -o $@
+
+$(TARGET_SHARED): main.o $(SHARED_LIB)
+	$(CC) main.o -L. -lmymathsh -Wl,-rpath=. -o $@
+
+%.o: %.c mathlib.h
+	$(CC) $(CFLAGS) -c $< -o $@
+
+%.pic.o: %.c mathlib.h
+	$(CC) $(CFLAGS) $(PICFLAGS) -c $< -o $@
+
+main.o: main.c mathlib.h
+	$(CC) $(CFLAGS) -c main.c -o $@
+
+clean:
+	rm -f *.o *.a *.so app_static app_shared
+
+.PHONY: all clean

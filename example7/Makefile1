@@ -1,0 +1,22 @@
+CC = gcc
+CFLAGS = -Wall -Wextra -O2 -fPIC
+LIB = libmymath.so
+SRCS = add.c sub.c mul.c div.c
+OBJS = $(SRCS:.c=.o)
+TARGET = app
+
+all: $(LIB) $(TARGET)
+
+$(LIB): $(OBJS)
+	$(CC) -shared -o $@ $^
+
+$(TARGET): main.o $(LIB)
+	$(CC) main.o -L. -lmymath -Wl,-rpath=. -o $@
+
+%.o: %.c mathlib.h
+	$(CC) $(CFLAGS) -c $< -o $@
+
+clean:
+	rm -f *.o *.so $(TARGET)
+
+.PHONY: all clean
