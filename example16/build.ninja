@@ -1,0 +1,74 @@
+# =====================================
+# Cross toolchain
+# =====================================
+cross = arm-none-eabi-
+cc = ${cross}gcc
+objcopy = ${cross}objcopy
+size = ${cross}size
+
+# =====================================
+# Directories
+# =====================================
+builddir = build
+srcdir = src
+incdir = include
+
+# =====================================
+# Flags
+# =====================================
+cflags = -I$incdir -Wall -Wextra -O2 -ffreestanding -mcpu=cortex-m4 -mthumb
+ldflags = -T linker.ld -nostdlib -Wl,--gc-sections -mcpu=cortex-m4 -mthumb
+
+# =====================================
+# Rules
+# =====================================
+rule mkdir
+  command = mkdir -p $out
+  description = MKDIR $out
+
+rule cc
+  command = $cc $cflags -c $in -o $out
+  description = CC $out
+
+rule link
+  command = $cc $in $ldflags -o $out
+  description = LINK $out
+
+rule bin
+  command = $objcopy -O binary $in $out
+  description = OBJCOPY $out
+
+rule hex
+  command = $objcopy -O ihex $in $out
+  description = OBJCOPY $out
+
+rule size_rule
+  command = $size $in
+  description = SIZE $in
+
+# =====================================
+# Build directory
+# =====================================
+build $builddir: mkdir
+
+# =====================================
+# Object files
+# =====================================
+build $builddir/main.o: cc $srcdir/main.c | $builddir
+build $builddir/uart.o: cc $srcdir/uart.c | $builddir
+build $builddir/startup.o: cc $srcdir/startup.c | $builddir
+
+# =====================================
+# Final ELF
+# =====================================
+build $builddir/firmware.elf: link $builddir/startup.o $builddir/main.o $builddir/uart.o
+
+# =====================================
+# Extra output formats
+# =====================================
+build $builddir/firmware.bin: bin $builddir/firmware.elf
+build $builddir/firmware.hex: hex $builddir/firmware.elf
+build $builddir/firmware.size: size_rule $builddir/firmware.elf
+
+default $builddir/firmware.elf
+
