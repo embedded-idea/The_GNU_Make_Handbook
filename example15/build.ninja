@@ -1,0 +1,56 @@
+# =====================================
+# Variables
+# =====================================
+cc = gcc
+builddir = build_ninja
+
+cflags = -Wall -Wextra -O2
+picflags = -fPIC
+
+# =====================================
+# Rules
+# =====================================
+rule mkdir
+  command = mkdir -p $out
+  description = MKDIR $out
+
+rule cc
+  command = $cc $cflags -c $in -o $out
+  description = CC $out
+
+rule cc_pic
+  command = $cc $cflags $picflags -c $in -o $out
+  description = CC(PIC) $out
+
+rule link_shared
+  command = $cc -shared -o $out $in
+  description = SHLIB $out
+
+rule link_app
+  command = $cc $in -Wl,-rpath,'$$ORIGIN' -o $out
+  description = LINK $out
+
+# =====================================
+# Build directory
+# =====================================
+build $builddir: mkdir
+
+# =====================================
+# Compile objects
+# main.o is for the executable
+# mathlib.pic.o is for the shared library
+# =====================================
+build $builddir/main.o: cc main.c | $builddir
+build $builddir/mathlib.pic.o: cc_pic mathlib.c | $builddir
+
+# =====================================
+# Build shared library
+# =====================================
+build $builddir/libmymath.so: link_shared $builddir/mathlib.pic.o
+
+# =====================================
+# Link final executable against .so
+# =====================================
+build $builddir/app: link_app $builddir/main.o $builddir/libmymath.so
+
+default $builddir/app
