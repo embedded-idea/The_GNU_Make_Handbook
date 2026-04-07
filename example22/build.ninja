@@ -1,0 +1,23 @@
+# why Ninja is fast
+# This is a good conceptual code example.
+# Ninja is designed to:
+# do very little extra work
+# execute dependency graph efficiently be fast
+# But it is not as pleasant to author manually for large projects.
+# That is why tools generate Ninja files.
+
+rule cc
+  command = gcc -c $in -o $out
+  description = CC $out
+
+rule link
+  command = gcc $in -o $out
+  description = LINK $out
+
+build tool.o: cc tool.c
+build a.o: cc a.c
+build b.o: cc b.c
+build c.o: cc c.c
+build app: link a.o b.o c.o tool.o
+
+
