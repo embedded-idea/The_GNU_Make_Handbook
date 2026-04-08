@@ -7,3 +7,7 @@ https://www.udemy.com/course/master-makefile-build-systems-in-linux-from-zero-to
 All Udemy Video Classes
 https://www.udemy.com/user/classknowledgecoding/
 
+
+<img width="991" height="928" alt="image" src="https://github.com/user-attachments/assets/0193720e-ec0a-42a9-a3aa-7c4bad8eea4a" />
+
+
